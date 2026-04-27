@@ -1,5 +1,6 @@
 import en from './locales/en.json';
 import de from './locales/de.json';
+import ko from './locales/ko.json';
 
 export default defineI18nConfig(() => ({
   legacy: false,
@@ -46,10 +47,30 @@ export default defineI18nConfig(() => ({
         hour12: true,
       },
     },
+    ko: {
+      short: {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      },
+      long: {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        weekday: 'short',
+        hour: 'numeric',
+        minute: 'numeric',
+      },
+      timeOfDay: {
+        hour: 'numeric',
+        minute: 'numeric',
+      },
+    },
   },
 
   messages: {
     en,
-    de
+    de,
+    ko
   }
 }))

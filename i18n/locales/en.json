@@ -11,6 +11,12 @@
     "messages": "search messages",
     "results": "search results for {0} in {1}",
     "everywhere": "search everywhere",
+    "sender": "sender",
+    "anySender": "any sender",
+    "regex": "use regex",
+    "fromDate": "from date",
+    "toDate": "to date",
+    "scrollMore": "scroll to load more",
     "users": "search users",
     "channels": "search @:channel.word"
   },

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onKeyDown } from '@vueuse/core'
+import { onKeyDown, useIntersectionObserver } from '@vueuse/core'
 import LoadingSpinner from '~icons/line-md/loading-alt-loop'
 import CloseIcon from '~icons/line-md/close'
 import TextSearch from '~icons/mdi/text-search'
@@ -7,8 +7,22 @@ import TextSearch from '~icons/mdi/text-search'
 const route = useRoute()
 
 const channel = computed(() => route.params.channel)
+const users = useUsers()
 
-const { searching: _searching, allChannels, query, results } = useSearch(channel)
+const {
+  searching: _searching,
+  allChannels,
+  query,
+  regex,
+  sender,
+  fromDate,
+  toDate,
+  sort,
+  results,
+  hasMore,
+  loadingMore,
+  loadMore,
+} = useSearch(channel)
 
 const searching = refDebounced(_searching, 150)
 
@@ -21,6 +35,8 @@ whenever(
 )
 
 const wrapper = ref<HTMLElement | null>(null)
+const resultsArea = ref<HTMLElement | null>(null)
+const moreSentinel = ref<HTMLElement | null>(null)
 const input = ref<HTMLInputElement | null>(null)
 const visible = ref(false)
 
@@ -47,6 +63,18 @@ onKeyDown(['Escape'], (e) => {
   e.preventDefault()
   visible.value = false
 })
+
+useIntersectionObserver(
+  moreSentinel,
+  ([entry]) => {
+    if (entry?.isIntersecting && hasMore.value && !searching.value && !loadingMore.value)
+      loadMore()
+  },
+  {
+    root: resultsArea,
+    threshold: 0.1,
+  },
+)
 </script>
 
 <template>
@@ -121,6 +149,51 @@ onKeyDown(['Escape'], (e) => {
                   </span>
                 </label>
               </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
+                <label class="form-control w-full">
+                  <span class="label-text mb-1 font-mono text-xs">{{ $t("search.sender") }}</span>
+                  <select v-model="sender" class="select select-bordered select-sm w-full">
+                    <option value="">
+                      {{ $t("search.anySender") }}
+                    </option>
+                    <option v-for="user in users" :key="user.id" :value="user.id">
+                      {{ useUserName(user) }}
+                    </option>
+                  </select>
+                </label>
+                <label class="max-w-max label cursor-pointer md:self-end">
+                  <input
+                    v-model="regex"
+                    type="checkbox"
+                    class="checkbox checkbox-sm"
+                  >
+                  <span
+                    class="capitalize font-mono font-medium label-text whitespace-nowrap ml-3"
+                  >
+                    {{ $t("search.regex") }}
+                  </span>
+                </label>
+                <label class="form-control w-full">
+                  <span class="label-text mb-1 font-mono text-xs">{{ $t("search.fromDate") }}</span>
+                  <input
+                    v-model="fromDate"
+                    type="date"
+                    class="input input-bordered input-sm w-full"
+                  >
+                </label>
+                <label class="form-control w-full">
+                  <span class="label-text mb-1 font-mono text-xs">{{ $t("search.toDate") }}</span>
+                  <input
+                    v-model="toDate"
+                    type="date"
+                    class="input input-bordered input-sm w-full"
+                  >
+                </label>
+                <label class="form-control w-full md:col-span-2">
+                  <span class="label-text mb-1 font-mono text-xs">{{ $t("filter.sort") }}</span>
+                  <BaseSort v-model="sort" />
+                </label>
+              </div>
             </div>
             <Transition name="fade" mode="out-in">
               <div
@@ -129,12 +202,22 @@ onKeyDown(['Escape'], (e) => {
               >
                 <LoadingSpinner class="w-12 h-12" />
               </div>
-              <MessageResults
+              <div
                 v-else
-                class="min-h-0 overflow-auto"
-                :results="results"
-                @close="visible = false"
-              />
+                ref="resultsArea"
+                class="min-h-0 overflow-auto flex-1"
+              >
+                <MessageResults
+                  :results="results"
+                  @close="visible = false"
+                />
+                <div ref="moreSentinel" class="py-4 flex justify-center">
+                  <LoadingSpinner v-if="loadingMore" class="w-8 h-8" />
+                  <span v-else-if="hasMore" class="text-sm text-base-content/60">
+                    {{ $t("search.scrollMore") }}
+                  </span>
+                </div>
+              </div>
             </Transition>
           </div>
         </div>
