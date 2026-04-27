@@ -3,10 +3,7 @@ volumes:
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: slack-vuesualizer-local
+    image: swfs0417/slack-vuesualizer:latest
     restart: unless-stopped
     ports:
       - '3000:3000'
