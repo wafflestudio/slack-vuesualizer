@@ -3,7 +3,7 @@ volumes:
 
 services:
   app:
-    image: swfs0417/slack-vuesualizer:latest
+    build: .
     restart: unless-stopped
     ports:
       - '3000:3000'

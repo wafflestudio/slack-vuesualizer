@@ -22,6 +22,8 @@ const user = computed(() =>
 
 const hasReplies = computed(() => (props.message.reply_count ?? 0) > 0)
 
+const { highlight } = useHighlight()
+
 const timestamp = computed(() => toTs(props.message.ts))
 </script>
 
@@ -48,9 +50,7 @@ const timestamp = computed(() => toTs(props.message.ts))
       <template v-if="message.blocks?.length">
         <MessageBlock v-for="(section, i) in message.blocks" :key="i" :node="section" />
       </template>
-      <p v-else class="text-gray-500 dark:text-gray-400 whitespace-pre-wrap">
-        {{ message.text }}
-      </p>
+      <p v-else class="text-gray-500 dark:text-gray-400 whitespace-pre-wrap" v-html="highlight(message.text ?? '')" />
     </div>
     <SearchIcon v-if="searched" class="w-8 h-8 self-center mr-2" />
     <div v-if="message.reactions" class="flex gap-2 col-start-2 flex-wrap">

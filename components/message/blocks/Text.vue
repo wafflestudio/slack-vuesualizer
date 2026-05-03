@@ -2,6 +2,8 @@
 import type { TextLeaf } from '~~/types/Message'
 
 defineProps<{ node: TextLeaf }>()
+
+const { highlight } = useHighlight()
 </script>
 
 <template>
@@ -13,6 +15,6 @@ defineProps<{ node: TextLeaf }>()
       'px-1 font-mono bg-gray-200 dark:bg-gray-600/50 text-red-600':
         node.style?.code,
     }"
-    v-text="node.text"
+    v-html="highlight(node.text)"
   />
 </template>

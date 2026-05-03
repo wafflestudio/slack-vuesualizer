@@ -24,6 +24,9 @@ const {
   loadMore,
 } = useSearch(channel)
 
+provide('searchQuery', query)
+provide('searchRegex', regex)
+
 const searching = refDebounced(_searching, 150)
 
 whenever(

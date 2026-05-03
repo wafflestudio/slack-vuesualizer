@@ -7,7 +7,7 @@ export function useSearch(currentChannel: Ref<string | string[]>) {
   const results = ref<Message[]>([])
   const query = ref('')
   const allChannels = ref(false)
-  const regex = ref(false)
+  const regex = ref(true)
   const sender = ref('')
   const fromDate = ref('')
   const toDate = ref('')
