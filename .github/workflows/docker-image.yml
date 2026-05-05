@@ -36,7 +36,7 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            chris5896/slack-vuesualizer
+            wafflestudio/slack-vuesualizer
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}

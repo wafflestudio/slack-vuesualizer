@@ -2,103 +2,97 @@
 
 <img alt="Slack" width="250" height="250" src="./public/Slack_Mark.svg"/>
 
-Are you on the free plan of Slack and can't access your old messages anymore?
-Then this is the tool for you!
-
-Slack Vuesualizer is a web app to view, search and share your old Slack messages.
+Slack Export 데이터를 웹에서 탐색, 검색, 공유하기 위한 뷰어입니다.
 
 ![Screenshot](./public/screenshot.png)
 
-Use the hosted version at [https://slack-vuesualizer.de/](https://slack-vuesualizer.de/) for free or spin up your own website using the Docker image as [described below](#setup).
+- Original project: https://github.com/4350pChris/slack-vuesualizer
 
-## Demo
+## 변경사항
 
-You can try out the demo workspace at [https://slack-vuesualizer.de/?token=5f305938-a64d-441d-9146-df23d8b52f18](https://slack-vuesualizer.de/?token=5f305938-a64d-441d-9146-df23d8b52f18).
+한국어 지원 추가, 정규표현식 검색 추가, 검색결과 정렬 추가, 검색결과 및 채널 메시지 페이지네이션(무한 스크롤) 추가했습니다.
 
-## Features
+## 주요 기능
 
-* full-text search for up to tens of thousands of messages per channel
-* view all messages per channel with proper formatting, files, etc.
-* view and search through all users
-* pleasant UI
+- Slack 메시지/사용자/파일 조회
+- 채널 단위 대용량 메시지 탐색
+- 전체 텍스트 검색 및 정규표현식 검색
+- 검색 결과 정렬
+- 검색 결과/채널 메시지 무한 스크롤 페이지네이션
+- 다국어 지원(English, Deutsch, 한국어)
 
-## Setup
+## 빌드 가이드
 
-### Docker
+### 1) 개발 환경 실행
 
-The easiest way to get started is to use the Docker image.
-For this you'll need to have [Docker](https://www.docker.com/) installed on your machine.
+사전 준비:
 
-Next, copy the `docker-compose.yml` file from this repository to your machine.
-From the directory where the file is located, open a terminal and run:
+- Node.js 22
+- pnpm (corepack 사용 권장)
+- Docker (로컬 MongoDB 실행 시)
 
-```bash
-docker compose up
-```
-
-That's it! Docker will download the images and start the app on [http://localhost:3000](http://localhost:3000).
-
-#### Images
-
-There are Docker images for amd64 and arm64 available at [hub.docker.io/chris5896/slack-vuesualizer](https://hub.docker.com/repository/docker/chris5896/slack-vuesualizer) as well as the GitHub Container Registry [https://ghcr.io/4350pchris/slack-vuesualizer](https://ghcr.io/4350pchris/slack-vuesualizer)
-
-Every Branch gets its own tag and is released.
-
-All the files to build a local image can be found in this repository as well.
-
-## Contributing
-
-Contributions are welcome! Feel free to fork this repository and open a pull request.
-
-If you have an idea for a feature or a bug to report, feel free to open an issue.
-
-### Development
-
-Look at the [nuxt 3 documentation](https://nuxt.com) to learn more.
-
-Make sure to install the dependencies:
+의존성 설치:
 
 ```bash
-npm install
+corepack enable
+pnpm install
 ```
 
-#### MongoDB
-
-This project contains a Docker Compose file to start a local MongoDB instance. You can start it with:
+로컬 MongoDB 실행:
 
 ```bash
-docker compose -f docker-compose.dev.yml up
+docker compose -f docker-compose.dev.yml up -d
 ```
 
-#### Development Server
-
-Start the development server on [http://localhost:3000](http://localhost:3000)
+개발 서버 실행:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-#### Production (Preview) Server
-
-Build the application for production:
+### 2) 프로덕션 빌드
 
 ```bash
-npm run build
+pnpm build
+pnpm preview
 ```
 
-Locally preview production build:
+## 배포 가이드
+
+### A. Docker Compose로 배포 (권장)
+
+이 저장소의 docker-compose.yml을 그대로 사용하면 앱 + MongoDB(+ mongo-express)를 함께 실행할 수 있습니다.
 
 ```bash
-npm run preview
+docker compose up -d
 ```
 
-Checkout the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+기본 접속:
 
-## Technologies
+- App: http://localhost:3000
+- Mongo Express: 기본 포트 미노출 (필요 시 compose 파일에서 포트 매핑 추가)
 
-* [Nuxt 3](https://v3.nuxtjs.org/)
-* [TailwindCSS](https://tailwindcss.com/) and [DaisyUI](https://daisyui.com)
-* [Iconify](https://github.com/iconify/iconify)
-* [MongoDB](https://www.mongodb.com/)
-* [Docker](https://www.docker.com/)
-* [Vercel](https://vercel.com/)
+### B. 로컬에서 이미지 빌드 후 배포
+
+```bash
+docker build -t slack-vuesualizer:local .
+docker run -d \
+	--name slack-vuesualizer \
+	-p 3000:3000 \
+	-e NUXT_MONGODB_URI='mongodb://root:example@<mongo-host>:27017' \
+	slack-vuesualizer:local
+```
+
+## 환경 변수
+
+필수:
+
+- NUXT_MONGODB_URI: MongoDB 연결 문자열
+
+선택:
+
+- NUXT_PUBLIC_DEMO_WORKSPACE_TOKEN
+- NUXT_PUBLIC_CANONICAL_HOST
+- NUXT_PUBLIC_VERSION
+- NUXT_PUBLIC_BUILD_DATE
+

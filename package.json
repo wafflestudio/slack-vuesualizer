@@ -8,10 +8,10 @@
     "email": "slack-vuesualizer@ennen.dev"
   },
   "license": "MIT",
-  "homepage": "https://github.com/4350pChris/slack-vuesualizer",
+  "homepage": "https://github.com/wafflestudio/slack-vuesualizer",
   "repository": {
     "type": "git",
-    "url": "https://github.com/4350pChris/slack-vuesualizer.git"
+    "url": "https://github.com/wafflestudio/slack-vuesualizer.git"
   },
   "keywords": [
     "slack",

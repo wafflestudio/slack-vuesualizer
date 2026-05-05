@@ -26,7 +26,7 @@ const leave = async () => {
     <div>
       <a
         class="btn btn-ghost btn-block gap-4"
-        href="https://github.com/4350pChris/slack-vuesualizer"
+        href="https://github.com/wafflestudio/slack-vuesualizer"
         target="_blank"
         rel="noopener noreferrer"
         title="GitHub"

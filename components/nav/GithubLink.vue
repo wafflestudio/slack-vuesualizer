@@ -14,7 +14,7 @@ withDefaults(defineProps<Props>(), {
   <a
     class="btn btn-ghost"
     :class="{ 'btn-block gap-4': !simple, 'btn-circle': simple }"
-    href="https://github.com/4350pChris/slack-vuesualizer"
+    href="https://github.com/wafflestudio/slack-vuesualizer"
     target="_blank"
     rel="noopener"
     title="GitHub"
