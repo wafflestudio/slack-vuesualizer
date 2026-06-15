@@ -26,7 +26,7 @@ const model = useVModel(props, 'modelValue', emit)
 <template>
   <BaseSelect v-model="model" :items="sortables">
     <template #activator>
-      {{ model }}
+      {{ $t(`filter.${model}`) }}
     </template>
     <template #item="{ item }">
       {{ $t(`filter.${item}`) }}
