@@ -18,6 +18,7 @@ const toggle = ref<HTMLElement>()
         <div class="flex justify-evenly gap-4">
           <NavLocaleChanger />
           <NavThemeToggle />
+          <NavLogout />
         </div>
       </div>
       <NavMenu />

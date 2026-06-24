@@ -25,6 +25,7 @@ defineProps<Props>()
         <NavToken />
         <NavLocaleChanger />
         <NavThemeToggle />
+        <NavLogout />
         <NavGithubLink simple />
       </div>
     </nav>
